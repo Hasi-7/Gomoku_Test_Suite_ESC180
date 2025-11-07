@@ -17,7 +17,7 @@ Your gomoku.py must include these functions:
 - print_board(board)
 
 Once you've replaced this file with your implementation, run:
-    python test_gomoku_runner.py
+    python run_all_tests.py
     
 Or if you have pytest:
     pytest -v
@@ -51,4 +51,5 @@ def is_win(board):
     raise NotImplementedError("Replace this file with your gomoku.py")
 
 def print_board(board):
+
     raise NotImplementedError("Replace this file with your gomoku.py")
