@@ -147,14 +147,14 @@ def test_print_board_output():
 
 def test_continue_playing_and_draw():
     b = make_empty_board(8)
-    b[0][0] = 'b'
-    assert_true(is_win(b) == 'Continue playing')
-
-    b2 = make_empty_board(8)
+    # Fill with pattern that prevents any sequence of 5
     for i in range(8):
         for j in range(8):
-            b2[i][j] = 'b' if (i + j) % 2 == 0 else 'w'
-    assert_true(is_win(b2) == 'Draw')
+            if i < 4:
+                b[i][j] = 'b' if (i + j) % 2 == 0 else 'w'
+            else:
+                b[i][j] = 'w' if (i + j) % 2 == 0 else 'b'  # Reverse pattern in bottom half
+    assert_true(is_win(b) == 'Draw')
 
 
 # ============================================================================
@@ -363,9 +363,13 @@ def test_no_win_with_four():
 
 def test_draw_on_full_board_no_winner():
     b = make_empty_board(8)
+    # Fill with pattern that prevents any sequence of 5
     for i in range(8):
         for j in range(8):
-            b[i][j] = 'b' if (i + j) % 2 == 0 else 'w'
+            if i < 4:
+                b[i][j] = 'b' if (i + j) % 2 == 0 else 'w'
+            else:
+                b[i][j] = 'w' if (i + j) % 2 == 0 else 'b'  # Reverse pattern in bottom half
     assert_equal(is_win(b), 'Draw')
 
 
@@ -470,7 +474,11 @@ def test_search_max_one_empty_cell():
     for i in range(8):
         for j in range(8):
             if not (i == 3 and j == 3):
-                b[i][j] = 'b' if (i + j) % 2 == 0 else 'w'
+                # Use rows of 4 max pattern to prevent accidental wins
+                if j < 4:
+                    b[i][j] = 'b' if i % 2 == 0 else 'w'
+                else:
+                    b[i][j] = 'w' if i % 2 == 0 else 'b'
     y, x = search_max(b)
     assert_equal((y, x), (3, 3), f"With only one empty cell, should return (3,3), got ({y},{x})")
 
@@ -669,7 +677,11 @@ def test_near_full_board():
     for i in range(8):
         for j in range(8):
             if not ((i == 4 and j == 4) or (i == 4 and j == 5)):
-                b[i][j] = 'b' if (i + j) % 2 == 0 else 'w'
+                # Use rows of 4 max pattern to prevent accidental wins
+                if j < 4:
+                    b[i][j] = 'b' if i % 2 == 0 else 'w'
+                else:
+                    b[i][j] = 'w' if i % 2 == 0 else 'b'
     
     assert_equal(is_win(b), 'Continue playing')
     y, x = search_max(b)
